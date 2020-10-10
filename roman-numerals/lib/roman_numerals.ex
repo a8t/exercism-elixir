@@ -5,10 +5,8 @@ defmodule RomanNumerals do
   @spec numeral(pos_integer) :: String.t()
   def numeral(number) do
     number
-    |> Integer.to_string()
-    |> String.split("", trim: true)
+    |> Integer.digits()
     |> Enum.reverse()
-    |> Enum.map(&String.to_integer(&1))
     |> Enum.with_index()
     |> Enum.map(fn {digit, index} -> digit_to_roman_string(digit, index) end)
     |> Enum.reverse()
