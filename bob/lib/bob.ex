@@ -11,15 +11,16 @@ defmodule Bob do
 
   defp is_silence(input) do
     # a string is silence if only whitespace lies between its beginning and end
-    String.match?(input, ~r/^[\s]*$/)
+    input
+    |> String.trim()
+    |> String.equivalent?("")
   end
 
   defp is_question(input) do
     # a string is a question if the last non-whitespace character is a question mark
     input
     |> String.trim()
-    |> String.last()
-    |> String.equivalent?("?")
+    |> String.ends_with?("?")
   end
 
   defp is_allcaps(input) do
