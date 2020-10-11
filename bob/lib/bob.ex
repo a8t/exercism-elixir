@@ -23,7 +23,12 @@ defmodule Bob do
   end
 
   defp is_allcaps(input) do
-    # a string is allcaps if it contains letters but doesn't contain lowercase letters
-    String.match?(input, ~r/[[:alpha:]]/) and !String.match?(input, ~r/[[:lower:]]/)
+    # a string contains letters if uppercasing and lowercasing produces different strings
+    contains_letters = not String.equivalent?(String.upcase(input), String.downcase(input))
+
+    are_all_letters_uppercase = String.equivalent?(input, String.upcase(input))
+
+    # a string is allcaps if it contains letters and all letters are uppercase
+    contains_letters and are_all_letters_uppercase
   end
 end
