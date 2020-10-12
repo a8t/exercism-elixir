@@ -1,5 +1,7 @@
 defmodule RotationalCipher do
   @alphabet_length 26
+  @upper ?A..?Z
+  @lower ?a..?z
 
   @doc """
   Given a plaintext and amount to shift by, return a rotated string.
@@ -16,17 +18,9 @@ defmodule RotationalCipher do
     |> to_string()
   end
 
-  defp rotate_char(char, shift) when char >= ?A and char <= ?Z do
-    rotate_letter(char, shift, ?A)
-  end
-
-  defp rotate_char(char, shift) when char >= ?a and char <= ?z do
-    rotate_letter(char, shift, ?a)
-  end
-
-  defp rotate_char(char, _) do
-    char
-  end
+  defp rotate_char(char, shift) when char in @upper, do: rotate_letter(char, shift, ?A)
+  defp rotate_char(char, shift) when char in @lower, do: rotate_letter(char, shift, ?a)
+  defp rotate_char(char, _shift), do: char
 
   # for uppercase and lowercase letters:
   # - "zero" the char by subtracting codepoint ?A or ?a respectively
