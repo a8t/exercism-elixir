@@ -22,9 +22,12 @@ defmodule BeerSong do
 
   def lyrics(range) do
     range
-    |> Enum.map(&verse(&1))
-    |> Enum.join("\n")
+    |> Enum.to_list()
+    |> recursive_lyrics()
   end
+
+  defp recursive_lyrics([number]), do: verse(number)
+  defp recursive_lyrics([head | tail]), do: verse(head) <> "\n" <> recursive_lyrics(tail)
 
   @spec number_of_beers_on_wall(number) :: String.t()
   defp number_of_beers_on_wall(0), do: "No more bottles of beer on the wall"
