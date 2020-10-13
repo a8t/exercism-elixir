@@ -49,57 +49,18 @@ defmodule RobotSimulator do
   @spec simulate(robot :: any, instructions :: String.t()) :: any
   def simulate(robot, ""), do: robot
 
+  def simulate(_robot, <<current_instruction, _remaining_instructions::binary>>)
+      when current_instruction not in @instructions do
+    {:error, "invalid instruction"}
+  end
+
   def simulate(robot, <<current_instruction, remaining_instructions::binary>>) do
-    case current_instruction do
-      current_instruction when current_instruction in @instructions ->
-        robot
-        |> apply_instruction(current_instruction)
-        |> simulate(remaining_instructions)
-
-      _ ->
-        {:error, "invalid instruction"}
-    end
+    robot
+    |> apply_instruction(current_instruction)
+    |> simulate(remaining_instructions)
   end
 
-  defp apply_instruction(robot, ?R) do
-    %{direction: current_direction, position: current_position} = robot
-
-    new_direction =
-      case current_direction do
-        :north -> :east
-        :east -> :south
-        :south -> :west
-        :west -> :north
-      end
-
-    %{
-      :direction => new_direction,
-      :position => current_position
-    }
-  end
-
-  defp apply_instruction(robot, ?L) do
-    %{direction: current_direction, position: current_position} = robot
-
-    new_direction =
-      case current_direction do
-        :north -> :west
-        :east -> :north
-        :south -> :east
-        :west -> :south
-      end
-
-    %{
-      :direction => new_direction,
-      :position => current_position
-    }
-  end
-
-  defp apply_instruction(robot, ?A) do
-    %{direction: current_direction, position: current_position} = robot
-
-    {x_position, y_position} = current_position
-
+  defp apply_instruction(%{direction: current_direction, position: {x_position, y_position}}, ?A) do
     new_position =
       case current_direction do
         :north -> {x_position, y_position + 1}
@@ -113,6 +74,23 @@ defmodule RobotSimulator do
       :position => new_position
     }
   end
+
+  defp apply_instruction(%{direction: current_direction, position: current_position}, instruction) do
+    %{
+      :direction => new_direction(instruction, current_direction),
+      :position => current_position
+    }
+  end
+
+  defp new_direction(?R, :north), do: :east
+  defp new_direction(?R, :east), do: :south
+  defp new_direction(?R, :south), do: :west
+  defp new_direction(?R, :west), do: :north
+
+  defp new_direction(?L, :north), do: :west
+  defp new_direction(?L, :east), do: :north
+  defp new_direction(?L, :south), do: :east
+  defp new_direction(?L, :west), do: :south
 
   @doc """
   Return the robot's direction.
