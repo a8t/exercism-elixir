@@ -7,9 +7,9 @@ defmodule RobotSimulator do
   ]
 
   @instructions [
-    "L",
-    "R",
-    "A"
+    ?L,
+    ?R,
+    ?A
   ]
 
   @doc """
@@ -49,10 +49,7 @@ defmodule RobotSimulator do
   @spec simulate(robot :: any, instructions :: String.t()) :: any
   def simulate(robot, ""), do: robot
 
-  def simulate(robot, instructions) do
-    current_instruction = String.first(instructions)
-    remaining_instructions = String.slice(instructions, 1..-1)
-
+  def simulate(robot, <<current_instruction, remaining_instructions::binary>>) do
     case current_instruction do
       current_instruction when current_instruction in @instructions ->
         robot
@@ -64,7 +61,7 @@ defmodule RobotSimulator do
     end
   end
 
-  defp apply_instruction(robot, "R") do
+  defp apply_instruction(robot, ?R) do
     %{direction: current_direction, position: current_position} = robot
 
     new_direction =
@@ -81,7 +78,7 @@ defmodule RobotSimulator do
     }
   end
 
-  defp apply_instruction(robot, "L") do
+  defp apply_instruction(robot, ?L) do
     %{direction: current_direction, position: current_position} = robot
 
     new_direction =
@@ -98,7 +95,7 @@ defmodule RobotSimulator do
     }
   end
 
-  defp apply_instruction(robot, "A") do
+  defp apply_instruction(robot, ?A) do
     %{direction: current_direction, position: current_position} = robot
 
     {x_position, y_position} = current_position
